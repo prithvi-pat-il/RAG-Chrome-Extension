@@ -1,0 +1,27 @@
+# Environment Variables (CRITICAL)
+.env
+*.env
+backend/.env
+backend/*.env
+
+# Python Virtual Environments
+myenv/
+venv/
+.venv/
+env/
+ENV/
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*.class
+*.pyc
+
+# IDE & OS Files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
+# Log files
+*.log
