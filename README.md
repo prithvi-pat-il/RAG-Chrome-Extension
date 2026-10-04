@@ -1,4 +1,4 @@
-# ?? PageGPT ? RAG-Based Chrome Extension
+# 🌐 PageGPT — RAG-Based Chrome Extension
 
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.115+-009688.svg?style=flat&logo=FastAPI&logoColor=white)](https://fastapi.tiangolo.com)
 [![LangChain](https://img.shields.io/badge/LangChain-v0.3+-1C3C3C.svg?style=flat&logo=chainlink&logoColor=white)](https://python.langchain.com)
@@ -10,7 +10,7 @@
 
 ---
 
-## ?? Table of Contents
+## 📑 Table of Contents
 - [Architecture & Workflow](#-architecture--workflow)
 - [How It Works](#-how-it-works)
 - [Key Features](#-key-features)
@@ -21,17 +21,16 @@
   - [1. Backend Setup](#1-backend-setup)
   - [2. Chrome Extension Setup](#2-chrome-extension-setup)
 - [API Documentation](#-api-documentation)
-- [Contributing & License](#-contributing--license)
 
 ---
 
-## ??? Architecture & Workflow
+## 🏛️ Architecture & Workflow
 
 ```mermaid
 graph LR
     subgraph Browser ["Client: Chrome Extension (Manifest V3)"]
         Tab["Active Webpage Tab"]
-        Popup["Chat Popup UI (HTML/CSS/JS)"]
+        Popup["Chat Popup UI (HTML / CSS / JS)"]
     end
 
     subgraph Backend ["Server: FastAPI Backend (:8000)"]
@@ -42,20 +41,19 @@ graph LR
         LLM["ChatGoogleGenerativeAI (gemini-2.5-flash)"]
     end
 
-    Popup -->|1. Query active tab URL| Tab
-    Popup -->|2. POST /process (URL)| API
-    API -->|3. Scrape and Chunk| Loader
-    Loader -->|4. Generate Embeddings| Embed
-    Embed -->|5. Index Chunks| VectorDB
-    Popup -->|6. POST /ask (Question + Session ID)| API
-    API -->|7. Similarity Search (Top-K Chunks)| VectorDB
-    VectorDB -->|8. Grounded Context + Prompt| LLM
-    LLM -->|9. Formatted Answer| Popup
+    Popup --> Tab
+    Popup --> API
+    API --> Loader
+    Loader --> Embed
+    Embed --> VectorDB
+    API --> VectorDB
+    VectorDB --> LLM
+    LLM --> Popup
 ```
 
 ---
 
-## ?? How It Works
+## 🔍 How It Works
 
 1. **Automatic URL Detection**: When you open the extension on any active tab, `chrome.tabs.query({ active: true, currentWindow: true })` automatically captures the current webpage URL.
 2. **Page Extraction & Ingestion**: The URL is sent to the FastAPI backend where LangChain's `WebBaseLoader` parses the webpage text.
@@ -66,21 +64,21 @@ graph LR
 
 ---
 
-## ? Key Features
+## ✨ Key Features
 
-- ? **Zero Copy-Pasting**: Automatically ingests and indexes whatever webpage you are reading.
-- ?? **Sub-Second Vector Search**: Fast in-memory FAISS indexing mapped per user session.
-- ?? **Hallucination-Free**: Strict zero-shot context prompt ensures answers come solely from the webpage.
-- ?? **Modern Conversational UI**:
+- ⚡ **Zero Copy-Pasting**: Automatically ingests and indexes whatever webpage you are reading.
+- 🚀 **Sub-Second Vector Search**: Fast in-memory FAISS indexing mapped per user session.
+- 🎯 **Hallucination-Free**: Strict zero-shot context prompt ensures answers come solely from the webpage.
+- 💬 **Modern Conversational UI**:
   - Animated 3-dot typing indicator.
-  - 1-click prompt suggestion chips (*"?? Summarize page"*, *"?? Key takeaways"*, *"?? Explain simply"*).
+  - 1-click prompt suggestion chips (*"📝 Summarize page"*, *"🔑 Key takeaways"*, *"💡 Explain simply"*).
   - Clear chat action and live backend status indicator.
   - Markdown formatting support (bullet points, bold text, code blocks).
-- ?? **Privacy & Isolation**: In-memory session-based vector stores; no permanent vector storage or tracking.
+- 🔒 **Privacy & Isolation**: In-memory session-based vector stores; no permanent vector storage or tracking.
 
 ---
 
-## ?? System Evaluation & Benchmarks
+## 📊 System Evaluation & Benchmarks
 
 The RAG pipeline was evaluated across the standard **RAG Triad** (Context Relevance, Faithfulness, and Answer Relevance):
 
@@ -90,38 +88,38 @@ The RAG pipeline was evaluated across the standard **RAG Triad** (Context Releva
 | | **Context Recall** | **91.8%** | Ability of top-k retrieved chunks to cover all required context |
 | **Generation Quality**| **Faithfulness (Groundedness)** | **98.5%** | Percentage of answer statements strictly derived from source text |
 | | **Answer Relevance** | **95.0%** | Semantic alignment between generated answer and user question |
-| **System Performance**| **Page Indexing Time** | **~1.2s ? 2.1s** | Time to scrape, chunk, embed, and construct FAISS index |
-| | **Query Response Latency** | **~650ms ? 1.1s** | Vector similarity search + Gemini 2.5 Flash inference |
+| **System Performance**| **Page Indexing Time** | **~1.2s – 2.1s** | Time to scrape, chunk, embed, and construct FAISS index |
+| | **Query Response Latency** | **~650ms – 1.1s** | Vector similarity search + Gemini 2.5 Flash inference |
 | | **Memory Footprint** | **< 2.5 MB / session** | Lightweight in-memory index footprint per active session |
 
 ---
 
-## ?? Project Structure
+## 📁 Project Structure
 
 ```
 RAG-Chrome-Extension/
-??? backend/
-?   ??? .env.example          # Environment variables template
-?   ??? main.py               # FastAPI application endpoints (/process, /ask, /health)
-?   ??? rag.py                # LangChain RAG pipeline (Loader, FAISS, Gemini LLM)
-?   ??? requirements.txt      # Python dependencies
-??? extension/
-?   ??? icon16.png            # 16x16 extension icon
-?   ??? icon32.png            # 32x32 extension icon
-?   ??? icon48.png            # 48x48 extension icon
-?   ??? icon128.png           # 128x128 extension icon
-?   ??? logo1.png             # Extension brand logo
-?   ??? manifest.json         # Chrome Extension Manifest V3 configuration
-?   ??? popup.html            # Extension popup layout
-?   ??? popup.js              # Tab URL extraction, API communication & chat logic
-?   ??? style.css             # Modern chat UI styling
-??? .gitignore                # Excludes .env, virtual environments, cache
-??? README.md                 # Project documentation
+├── backend/
+│   ├── .env.example          # Environment variables template
+│   ├── main.py               # FastAPI application endpoints (/process, /ask, /health)
+│   ├── rag.py                # LangChain RAG pipeline (Loader, FAISS, Gemini LLM)
+│   └── requirements.txt      # Python dependencies
+├── extension/
+│   ├── icon16.png            # 16x16 extension icon
+│   ├── icon32.png            # 32x32 extension icon
+│   ├── icon48.png            # 48x48 extension icon
+│   ├── icon128.png           # 128x128 extension icon
+│   ├── logo1.png             # Extension brand logo
+│   ├── manifest.json         # Chrome Extension Manifest V3 configuration
+│   ├── popup.html            # Extension popup layout
+│   ├── popup.js              # Tab URL extraction, API communication & chat logic
+│   └── style.css             # Modern chat UI styling
+├── .gitignore                # Excludes .env, virtual environments, cache
+└── README.md                 # Project documentation
 ```
 
 ---
 
-## ?? Prerequisites
+## 📋 Prerequisites
 
 - **Python 3.10+**
 - **Google Gemini API Key** (Get one at [Google AI Studio](https://aistudio.google.com/))
@@ -129,7 +127,7 @@ RAG-Chrome-Extension/
 
 ---
 
-## ?? Installation & Setup
+## 🚀 Installation & Setup
 
 ### 1. Backend Setup
 
@@ -180,22 +178,10 @@ RAG-Chrome-Extension/
 
 ---
 
-## ?? API Documentation
+## 📡 API Documentation
 
 | Method | Endpoint | Description | Request Body | Response Body |
 | :--- | :--- | :--- | :--- | :--- |
 | `GET` | `/health` | Health check endpoint | None | `{"status": "healthy"}` |
 | `POST` | `/process` | Scrapes, chunks, and indexes a URL | `{"url": "https://example.com"}` | `{"session_id": "uuid"}` |
 | `POST` | `/ask` | Queries RAG vector store for context & answer | `{"session_id": "uuid", "question": "..."}` | `{"answer": "..."}` |
-
----
-
-## ?? Contributing
-
-Contributions, issues, and feature requests are welcome! Feel free to check the [issues page](https://github.com/prithvi-pat-il/RAG-Chrome-Extension/issues).
-
----
-
-## ?? License
-
-This project is licensed under the MIT License ? see the [LICENSE](LICENSE) file for details.
